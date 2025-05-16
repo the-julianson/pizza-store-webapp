@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: pizza-store-api
+    rootDir: api
+    env: node
+    buildCommand: |
+      apt-get update && apt-get install -y python3 make g++ sqlite3
+      npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 10000 
