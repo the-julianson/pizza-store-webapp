@@ -3,13 +3,13 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { CartContext } from "../contexts";
 import Cart from "../Cart";
 import Pizza from "../Pizza";
-import { apiUrl } from '../config';
 
-// feel free to change en-US / USD to your locale
 const intl = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export const Route = createLazyFileRoute("/order")({
   component: Order,
@@ -58,24 +58,18 @@ function Order() {
     setLoading(false);
   }
 
-  function addToCart () { 
-    setCart([...cart, { pizza: selectedPizza, size: pizzaSize, price}])
-  }
-
   return (
     <div className="order-page">
       <div className="order">
         <h2>Create Order</h2>
         <form
-        // Used formActions from react19 
-          // onSubmit={(e) => {
-          //   e.preventDefault();
-          //   setCart([
-          //     ...cart,
-          //     { pizza: selectedPizza, size: pizzaSize, price },
-          //   ]);
-          // }}
-          action={addToCart}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setCart([
+              ...cart,
+              { pizza: selectedPizza, size: pizzaSize, price },
+            ]);
+          }}
         >
           <div>
             <div>
