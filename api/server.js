@@ -20,6 +20,7 @@ const __dirname = path.dirname(__filename);
 
 const db = await AsyncDatabase.open("./pizza.sqlite");
 
+
 // Add CORS support
 server.addHook('preHandler', (req, res, done) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -31,7 +32,6 @@ server.addHook('preHandler', (req, res, done) => {
     }  
     done();
 });
-
 server.get("/api/pizzas", async function getPizzas(req, res) {
   const pizzasPromise = db.all(
     "SELECT pizza_type_id, name, category, ingredients as description FROM pizza_types"
@@ -267,7 +267,7 @@ server.get("/api/past-order/:order_id", async function getPastOrder(req, res) {
 
     const formattedOrderItems = orderItems.map((item) =>
       Object.assign({}, item, {
-        image: `/public/pizzas/${item.pizzaTypeId}.webp`,
+        image: `/pizzas/${item.pizzaTypeId}.webp`,
         quantity: +item.quantity,
         price: +item.price,
       })
@@ -308,11 +308,22 @@ server.post("/api/contact", async function contactForm(req, res) {
 const start = async () => {
   try {
     await server.listen({ host: HOST, port: PORT });
+    console.log(`Server listening on port ${PORT}`);
   } catch (err) {
     console.error(err);
-    server.log.error(err);
     process.exit(1);
   }
 };
+
+server.addHook('preHandler', (req, res, done) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST");
+    res.header("Access-Control-Allow-Headers",  "*");
+    const isPreflight = /options/i.test(req.method);
+    if (isPreflight) {
+        return res.send();
+    }  
+    done();
+})
 
 start();
