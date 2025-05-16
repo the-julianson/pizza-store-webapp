@@ -1,4 +1,5 @@
 import { useState, useEffect, useDebugValue } from "react";
+import { apiUrl } from './config';
 
 export const usePizzaOfTheDay = () => {
   const [pizzaOfTheDay, setPizzaOfTheDay] = useState(null);
@@ -7,7 +8,7 @@ export const usePizzaOfTheDay = () => {
 
   useEffect(() => {
     async function fetchPizzaOfTheDay() {
-      const response = await fetch("/api/pizza-of-the-day");
+      const response = await fetch(`${apiUrl}/api/pizza-of-the-day`);
       const data = await response.json();
       setPizzaOfTheDay(data);
     }
